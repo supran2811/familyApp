@@ -1,9 +1,9 @@
 import request from 'supertest';
+import { HTTP_CODE } from '@familyapp/common';
 
 import { server } from '../../server';
 import '..';
 import User from '../../models/user';
-import { HTTP_CODE } from '../../constants/app-constant';
 
 describe('signup', () => {
   it('returns a 201 after a sucessfull signup', async () => {

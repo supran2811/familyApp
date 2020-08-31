@@ -4,15 +4,22 @@ metadata:
   name: familtyapp
 build:
   artifacts:
-  - image: familyapp/auth
-    context: auth
-    sync:
-      manual:
-        - src: src/**/*.ts
-          dest: .
+    - image: familyapp/auth
+      context: auth
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+    - image: familyapp/client
+      context: client
+      sync:
+        manual:
+          - src: src/**/*.tsx
+            dest: .
 deploy:
   statusCheckDeadlineSeconds: 180
   kubectl:
     manifests:
-     - infra/k8s/auth/*
-     - infra/k8s/k8-dev/*
+      - infra/k8s/auth/*
+      - infra/k8s/client/*
+      - infra/k8s/k8-dev/*

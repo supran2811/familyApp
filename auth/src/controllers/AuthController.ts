@@ -1,18 +1,25 @@
 import { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import {
+  controller,
+  post,
+  validator,
+  useMiddleware,
+  get,
+  validateRequest,
+  BadRequestError,
+  AuthenticationError,
+  HTTP_CODE,
+  currentUser,
+} from '@familyapp/common';
 
-import { controller, post, validator, useMiddleware, get } from './decorators';
-import { validateRequest } from './middlewares/validateRequest';
+import { router } from '../server';
 import User from '../models/user';
 import { Password } from '../service/password';
-import { BadRequestError } from '../errors/bad-request-error';
-import { AuthenticationError } from '../errors/auth-error';
-import { HTTP_CODE } from '../constants/app-constant';
 import messages from '../messages';
-import { currentUser } from './middlewares/currentUser';
 
-@controller('/api/users')
+@controller('/api/users', router)
 export class AuthController {
   @post('/signup')
   @validator(
@@ -100,7 +107,7 @@ export class AuthController {
 
   @get('/currentuser')
   @useMiddleware(currentUser)
-  currentUser(req: Request, res: Response) {
+  current(req: Request, res: Response) {
     res.send(req.currentUser || {});
   }
 }

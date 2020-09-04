@@ -61,7 +61,7 @@ export class AuthController {
       jwt: userJwt,
     };
 
-    res.status(HTTP_CODE.HTTP_CREATED).send({});
+    res.status(HTTP_CODE.HTTP_CREATED).send({ name, email });
   }
 
   @post('/signin')
@@ -96,7 +96,7 @@ export class AuthController {
       jwt: userJwt,
     };
 
-    res.status(HTTP_CODE.HTTP_OK).send({});
+    res.status(HTTP_CODE.HTTP_OK).send({ name: user.name, email });
   }
 
   @post('/signout')

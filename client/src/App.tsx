@@ -1,6 +1,7 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { IonApp, IonLoading } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 /* Core CSS required for Ionic components to work properly */
@@ -22,15 +23,21 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import Root from './pages/Root';
+import Login from './pages/Login';
+import { loading } from './selectors/applicationSelector';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/" component={Root} />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const isLoading = useSelector(loading);
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <Route exact path="/" render={() => <Root />} />
+        <Route path="/login" component={Login} />
+      </IonReactRouter>
+      <IonLoading isOpen={isLoading} message={'Please wait...'} />
+    </IonApp>
+  );
+};
 
 export default App;

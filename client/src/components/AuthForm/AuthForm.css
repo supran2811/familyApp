@@ -1,0 +1,24 @@
+.formSize {
+  width: 50%;
+}
+
+.pageTitle {
+  width: 50%;
+}
+
+.form-input {
+  margin: 20px 0px;
+}
+
+ion-button {
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .formSize {
+    width: 90%;
+  }
+  .pageTitle {
+    width: 90%;
+  }
+}

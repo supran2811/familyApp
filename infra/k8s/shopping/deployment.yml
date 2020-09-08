@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopping
+  template:
+    metadata:
+      labels:
+        app: shopping
+    spec:
+      containers:
+        - name: shopping
+          image: familyapp/shopping
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://shopping-mongo-srv:80/shopping'

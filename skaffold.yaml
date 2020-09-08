@@ -10,6 +10,12 @@ build:
         manual:
           - src: src/**/*.ts
             dest: .
+    - image: familyapp/shopping
+      context: shopping
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
     - image: familyapp/client
       context: client
       sync:

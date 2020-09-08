@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-srv
+spec:
+  selector:
+    app: shopping
+  ports:
+    - name: shopping
+      protocol: TCP
+      port: 80
+      targetPort: 3000

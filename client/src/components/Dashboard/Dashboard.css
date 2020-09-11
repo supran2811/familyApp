@@ -1,0 +1,6 @@
+.modal-small {
+  --height: 20%;
+  --max-width: 80%;
+  --border-color: var(--ion-color-medium);
+  --border-width: 1px;
+}

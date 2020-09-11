@@ -1,0 +1,20 @@
+.inputbox {
+  border: 1px solid var(--ion-color-secondary);
+}
+
+.model-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px;
+  background: var(--ion-color-light);
+}
+
+.modal-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

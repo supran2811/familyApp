@@ -5,12 +5,11 @@ import {
   del,
   get,
   useMiddleware,
-  usePreValidateMiddleware,
-  requireAuth,
   validator,
   validateRequest,
   HTTP_CODE,
   NotFoundError,
+  AuthenticationError,
 } from '@familyapp/common';
 import { body, check } from 'express-validator';
 import { Request, Response } from 'express';
@@ -39,15 +38,17 @@ export class Shopping {
 
     await shoppingModel.save();
 
-    res.status(HTTP_CODE.HTTP_CREATED).send({ id: shoppingModel.id });
+    res.status(HTTP_CODE.HTTP_CREATED).send(shoppingModel);
   }
 
   @put('/:id')
   @validator(
     check('creatorName')
+      .not()
       .exists()
       .withMessage('Original creator cannot be updated'),
     check('creatorId')
+      .not()
       .exists()
       .withMessage('Original creator cannot be updated'),
     body('name')
@@ -77,19 +78,14 @@ export class Shopping {
   @del('/')
   @validator(
     check('ids')
-      .not()
       .isArray()
-      .withMessage('require valid shopping list ids to delete'),
-    check('ids')
-      .toArray()
-      .isEmpty()
       .withMessage('require valid shopping list ids to delete')
   )
   @useMiddleware(validateRequest)
   async deleteMany(req: Request, res: Response) {
     const { ids } = req.body;
     await ShoppingModel.deleteMany({
-      id: {
+      _id: {
         $in: ids,
       },
     });
@@ -99,11 +95,26 @@ export class Shopping {
 
   @get('/:id')
   async show(req: Request, res: Response) {
-    res.send({});
+    const { id } = req.params;
+    const shoppingList = await ShoppingModel.findById(id);
+    if (!shoppingList) {
+      throw new NotFoundError();
+    }
+    if (shoppingList.creatorId !== req.currentUser!.id) {
+      throw new AuthenticationError('User not allowed to view this content');
+    }
+
+    const { name, items } = shoppingList;
+
+    res.status(HTTP_CODE.HTTP_OK).send({ name, items });
   }
 
   @get('/')
   async getAllListByUser(req: Request, res: Response) {
-    res.send({});
+    const shoppingLists = await ShoppingModel.find({
+      creatorId: req.currentUser!.id,
+    });
+
+    res.status(HTTP_CODE.HTTP_OK).send(shoppingLists);
   }
 }

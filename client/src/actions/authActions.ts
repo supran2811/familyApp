@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import ApiService from '../ApiService';
 
 export interface SignUpPayload {
   name: string;
@@ -14,54 +15,24 @@ export interface SignInPayload {
 export const signUpAction = createAsyncThunk(
   'user/signup',
   async (payload: SignUpPayload, thunkApi) => {
-    const response = await fetch('/api/users/signup', {
-      method: 'post',
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data;
+    return await ApiService.post('/api/users/signup', payload);
   }
 );
 
 export const signInAction = createAsyncThunk(
   'user/signin',
   async (payload: SignInPayload, thunkApi) => {
-    const response = await fetch('/api/users/signin', {
-      method: 'post',
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data;
+    return await ApiService.post('/api/users/signin', payload);
   }
 );
 
 export const getCurrentUser = createAsyncThunk(
   'user/currentUser',
   async (payload, thunkApi) => {
-    const response = await fetch('/api/users/currentuser', {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data;
+    return await ApiService.get('/api/users/currentuser');
   }
 );
 
 export const signOutAction = createAsyncThunk('user/signout', async () => {
-  const response = await fetch('/api/users/signout', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const data = await response.json();
-  return data;
+  return await ApiService.post('/api/users/signout', {});
 });

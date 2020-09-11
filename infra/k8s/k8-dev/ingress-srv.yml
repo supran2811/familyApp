@@ -14,6 +14,10 @@ spec:
             backend:
               serviceName: auth-srv
               servicePort: 80
+          - path: /api/shopping/?(.*)
+            backend:
+              serviceName: shopping-srv
+              servicePort: 80
           - path: /?(.*)
             backend:
               serviceName: client-srv

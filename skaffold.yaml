@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta6
 kind: Config
 metadata:
-  name: familtyapp
+  name: familyapp
 build:
   artifacts:
     - image: familyapp/auth
@@ -30,4 +30,5 @@ deploy:
     manifests:
       - infra/k8s/auth/*
       - infra/k8s/client/*
+      - infra/k8s/shopping/*
       - infra/k8s/k8-dev/*

@@ -16,5 +16,10 @@ spec:
         - name: shopping
           image: familyapp/shopping
           env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
             - name: MONGO_URI
               value: 'mongodb://shopping-mongo-srv:80/shopping'

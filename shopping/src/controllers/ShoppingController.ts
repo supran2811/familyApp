@@ -43,14 +43,6 @@ export class Shopping {
 
   @put('/:id')
   @validator(
-    check('creatorName')
-      .not()
-      .exists()
-      .withMessage('Original creator cannot be updated'),
-    check('creatorId')
-      .not()
-      .exists()
-      .withMessage('Original creator cannot be updated'),
     body('name')
       .trim()
       .isLength({ min: 2, max: 40 })
@@ -64,7 +56,6 @@ export class Shopping {
       throw new NotFoundError();
     }
     const { name, items = [] } = req.body;
-
     shoppingListToUpdate.set({
       name,
       items,
@@ -90,7 +81,7 @@ export class Shopping {
       },
     });
 
-    res.send({});
+    res.send({ ids });
   }
 
   @get('/:id')
@@ -104,9 +95,9 @@ export class Shopping {
       throw new AuthenticationError('User not allowed to view this content');
     }
 
-    const { name, items } = shoppingList;
+    // const { name, items } = shoppingList;
 
-    res.status(HTTP_CODE.HTTP_OK).send({ name, items });
+    res.status(HTTP_CODE.HTTP_OK).send(shoppingList);
   }
 
   @get('/')

@@ -1,10 +1,5 @@
 import mongoose from 'mongoose';
-
-export enum ItemStatus {
-  DONE = 'done',
-  PENDING = 'pending',
-  MISSING = 'missing',
-}
+import { ItemStatus } from '@familyapp/common';
 
 export interface Item {
   name: string;

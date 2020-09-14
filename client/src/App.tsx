@@ -25,6 +25,7 @@ import './theme/variables.css';
 import Root from './pages/Root';
 import Login from './pages/Login';
 import { loading } from './selectors/applicationSelector';
+import ShoppingList from './pages/ShoppingList';
 
 const App: React.FC = () => {
   const isLoading = useSelector(loading);
@@ -33,6 +34,7 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <Route exact path="/" render={() => <Root />} />
+        <Route path="/shopping/:id" component={ShoppingList} />
         <Route path="/login" component={Login} />
       </IonReactRouter>
       <IonLoading isOpen={isLoading} message={'Please wait...'} />

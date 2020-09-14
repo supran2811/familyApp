@@ -4,3 +4,7 @@
   --border-color: var(--ion-color-medium);
   --border-width: 1px;
 }
+
+.card-content {
+  cursor: pointer;
+}

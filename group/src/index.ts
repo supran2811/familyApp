@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { server } from './server';
 import { natsWrapper } from './nats-wrapper';
 import './controllers';
+import { initListeners } from './events/listeners';
 (async () => {
   if (!process.env.MONGO_URI) {
     throw new Error('Mongo uri must be defined in the enviorment variables');
@@ -14,10 +15,6 @@ import './controllers';
     !process.env.NATS_CLUSTER_ID
   ) {
     throw new Error('Nats server details are missing!!');
-  }
-
-  if (!process.env.JWT_KEY) {
-    throw new Error('Jwt key must be defined in the enviorment variables');
   }
   try {
     await natsWrapper.connect(
@@ -32,6 +29,8 @@ import './controllers';
 
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    initListeners();
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,

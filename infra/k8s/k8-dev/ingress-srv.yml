@@ -18,6 +18,10 @@ spec:
             backend:
               serviceName: shopping-srv
               servicePort: 80
+          - path: /api/group/?(.*)
+            backend:
+              serviceName: group-srv
+              servicePort: 80
           - path: /?(.*)
             backend:
               serviceName: client-srv

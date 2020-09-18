@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shopping-depl
+  name: group-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: shopping
+      app: group
   template:
     metadata:
       labels:
-        app: shopping
+        app: group
     spec:
       containers:
-        - name: shopping
-          image: familyapp/shopping
+        - name: group
+          image: familyapp/group
           env:
             - name: JWT_KEY
               valueFrom:
@@ -22,7 +22,7 @@ spec:
                   name: jwt-secret
                   key: JWT_KEY
             - name: MONGO_URI
-              value: 'mongodb://shopping-mongo-srv:80/shopping'
+              value: 'mongodb://group-mongo-srv:80/group'
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:

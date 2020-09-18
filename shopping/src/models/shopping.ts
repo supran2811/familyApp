@@ -63,4 +63,6 @@ const Shopping = mongoose.model<ShoppingDoc, ShoppingModel>(
   shoppingSchema
 );
 
+export { ItemStatus };
+
 export default Shopping;

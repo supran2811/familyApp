@@ -18,6 +18,8 @@ import { router } from '../server';
 import User from '../models/user';
 import { Password } from '../service/password';
 import messages from '../messages';
+import { UserCreatedPublisher } from '../events/publishers/user-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 @controller('/api/users', router)
 export class AuthController {
@@ -60,6 +62,12 @@ export class AuthController {
     req.session = {
       jwt: userJwt,
     };
+
+    new UserCreatedPublisher(natsWrapper.client).publish({
+      userid: user.id,
+      email: user.email,
+      name: user.name,
+    });
 
     res.status(HTTP_CODE.HTTP_CREATED).send({ name, email });
   }

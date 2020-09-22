@@ -5,12 +5,7 @@ import mongoose from 'mongoose';
 declare global {
   namespace NodeJS {
     interface Global {
-      signin(): string[];
-      mockUser: {
-        id: string;
-        email: string;
-        name: string;
-      };
+      signin(user?: { id: string; name: string; email: string }): string[];
     }
   }
 }
@@ -18,7 +13,6 @@ declare global {
 jest.mock('../nats-wrapper');
 
 let mongo: any;
-const mockUserID = mongoose.Types.ObjectId().toHexString();
 
 beforeAll(async () => {
   mongo = new MongoMemoryServer();
@@ -42,15 +36,13 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.mockUser = {
-  id: mockUserID,
-  email: 'test@test.com',
-  name: 'test',
-};
-
-global.signin = () => {
-  const payload = global.mockUser;
-
+global.signin = (
+  payload = {
+    id: mongoose.Types.ObjectId().toHexString(),
+    email: 'test@test.com',
+    name: 'test',
+  }
+) => {
   const token = jwt.sign(payload, process.env.JWT_KEY!);
   const session = { jwt: token };
 

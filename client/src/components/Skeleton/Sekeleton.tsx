@@ -10,15 +10,20 @@ import {
   IonButton,
   IonButtons,
   IonIcon,
+  IonMenuButton,
+  IonSplitPane,
+  IonMenu,
+  IonBackButton,
 } from '@ionic/react';
 
-import { signOutAction } from '../../actions/authActions';
+import SideMenu from '../SideMenu';
+
 import { User } from '../../reducers/auth';
 import { homeOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 interface SkeletonPropType {
-  childred: React.ReactNode;
+  children: React.ReactNode;
   currentUser?: User;
 }
 
@@ -26,31 +31,26 @@ const Skeleton: React.FC<InferProps<SkeletonPropType>> = ({
   children,
   currentUser,
 }) => {
-  const dispatch = useDispatch();
   const history = useHistory();
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          {currentUser && (
-            <>
-              <IonButtons slot="start">
-                <IonButton onClick={() => history.replace('/')}>
-                  <IonIcon icon={homeOutline} color="primary"></IonIcon>
-                </IonButton>
-              </IonButtons>
-              <IonButtons slot="end">
-                <IonButton onClick={() => dispatch(signOutAction())}>
-                  Signout
-                </IonButton>
-              </IonButtons>
-            </>
-          )}
-
+          <IonButtons slot="start">
+            {history.location.pathname !== '/' && (
+              <IonBackButton defaultHref="/" />
+            )}
+            <IonMenuButton />
+          </IonButtons>
           <IonTitle>FamilyApp</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>{children}</IonContent>
+      <IonContent>
+        <IonSplitPane contentId="main">
+          <SideMenu currentUser={currentUser} disabled={false} />
+          <IonPage id="main">{children}</IonPage>
+        </IonSplitPane>
+      </IonContent>
     </IonPage>
   );
 };

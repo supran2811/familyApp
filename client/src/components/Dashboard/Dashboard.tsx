@@ -64,7 +64,9 @@ const Dashboard: React.FC<InferProps<DashboardPropTypes>> = ({
   ) => {
     var newItems = items.slice(0, 3);
 
-    const updatedItems = newItems.map((item) => <IonItem>{item.name}</IonItem>);
+    const updatedItems = newItems.map((item) => (
+      <IonItem key={item.name}>{item.name}</IonItem>
+    ));
 
     if (items.length > updatedItems.length) {
       updatedItems.push(

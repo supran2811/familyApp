@@ -3,35 +3,24 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface UserAttrs {
   id: string;
-  name: string;
-  email: string;
   groupId?: string;
 }
 
-export interface UserDoc extends mongoose.Document {
-  name: string;
-  email: string;
-  groupId: string;
+interface UserDoc extends mongoose.Document {
+  id: string;
+  groupId?: string;
   version: number;
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
+  findByEvent(event: { id: string; version: number }): Promise<UserDoc | null>;
 }
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
     groupId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'group',
+      type: String,
       default: null,
     },
   },
@@ -51,9 +40,13 @@ userSchema.plugin(updateIfCurrentPlugin);
 userSchema.statics.build = (attrs: UserAttrs) =>
   new User({
     _id: attrs.id,
-    name: attrs.name,
-    email: attrs.email,
     groupId: attrs.groupId,
+  });
+
+userSchema.statics.findByEvent = (event: { id: string; version: number }) =>
+  User.findOne({
+    _id: event.id,
+    version: event.version - 1,
   });
 
 const User = mongoose.model<UserDoc, UserModel>('user', userSchema);

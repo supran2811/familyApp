@@ -5,12 +5,15 @@ import mongoose from 'mongoose';
 declare global {
   namespace NodeJS {
     interface Global {
-      signin(): string[];
+      signin(user?: { id: string; name: string; email: string }): string[];
     }
   }
 }
 
+jest.mock('../nats-wrapper');
+
 let mongo: any;
+
 beforeAll(async () => {
   mongo = new MongoMemoryServer();
   process.env.JWT_KEY = 'sfdsff';
@@ -33,13 +36,13 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signin = () => {
-  const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+global.signin = (
+  payload = {
+    id: mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
     name: 'test',
-  };
-
+  }
+) => {
   const token = jwt.sign(payload, process.env.JWT_KEY!);
   const session = { jwt: token };
 

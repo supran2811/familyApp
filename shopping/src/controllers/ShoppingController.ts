@@ -14,7 +14,7 @@ import {
 import { body, check } from 'express-validator';
 import { Request, Response } from 'express';
 import ShoppingModel from '../models/shopping';
-
+import User from '../models/user';
 import { router } from '../server';
 
 @controller('/api/shopping', router)
@@ -102,8 +102,24 @@ export class Shopping {
 
   @get('/')
   async getAllListByUser(req: Request, res: Response) {
+    /// Find the user
+    const requestingUser = await User.findById(req.currentUser!.id);
+
+    let userids = [requestingUser!.id];
+    if (requestingUser!.groupId !== null) {
+      /// Find all the users whose groupid === requsetinguser.groupid
+
+      const users = await User.find({ groupId: requestingUser!.groupId });
+
+      /// Create an array of userids
+      userids = users.map((user) => user.id);
+
+      console.log('userids', userids);
+    }
+
+    /// return shopping list created by any of these users
     const shoppingLists = await ShoppingModel.find({
-      creatorId: req.currentUser!.id,
+      creatorId: { $in: userids },
     });
 
     res.status(HTTP_CODE.HTTP_OK).send(shoppingLists);

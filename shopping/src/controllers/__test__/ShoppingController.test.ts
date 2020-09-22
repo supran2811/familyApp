@@ -5,6 +5,7 @@ import { server } from '../../server';
 import { HTTP_CODE } from '@familyapp/common';
 import '../ShoppingController';
 import ShoppingModel, { ItemStatus } from '../../models/shopping';
+import User from '../../models/user';
 
 describe('create new shopping list', () => {
   it('can only be access if user is signedin', async () => {
@@ -128,7 +129,19 @@ describe('get one shopping list by id', () => {
 
 describe('get all shopping list by user', () => {
   it('returns a shopping list for that user ', async () => {
-    const cookie = global.signin();
+    const user = {
+      id: mongoose.Types.ObjectId().toHexString(),
+      name: 'fsdsf',
+      email: 'sfds@dsfds.com',
+    };
+
+    const userLocalDb = User.build({
+      id: user.id,
+    });
+
+    await userLocalDb.save();
+
+    const cookie = global.signin(user);
     const res1 = await request(server)
       .post('/api/shopping')
       .set('Cookie', cookie)
@@ -150,5 +163,89 @@ describe('get all shopping list by user', () => {
 
     expect(response.body[1].id).toEqual(res2.body.id);
     expect(response.body[1].name).toEqual(res2.body.name);
+  });
+
+  it('returns all shopping list for user and also groups which user belongs to', async () => {
+    const user1 = {
+      id: mongoose.Types.ObjectId().toHexString(),
+      name: 'fsdsf',
+      email: 'sfds@dsfds.com',
+    };
+
+    const userLocalDb1 = User.build({
+      id: user1.id,
+      groupId: '123',
+    });
+
+    await userLocalDb1.save();
+
+    const user2 = {
+      id: mongoose.Types.ObjectId().toHexString(),
+      name: 'sdfd',
+      email: 'sdfdsf@dgfdg.com',
+    };
+
+    const userLocalDb2 = User.build({
+      id: user2.id,
+      groupId: '123',
+    });
+
+    await userLocalDb2.save();
+
+    const user3 = {
+      id: mongoose.Types.ObjectId().toHexString(),
+      name: 'dsfdf',
+      email: 'fgfdg@dgfdhgfhgg.com',
+    };
+
+    const userLocalDb3 = User.build({
+      id: user3.id,
+      groupId: '345',
+    });
+
+    await userLocalDb2.save();
+
+    const cookie = global.signin(user1);
+    const resUser11 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie)
+      .send({ name: 'sample1' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+    const resUser12 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie)
+      .send({ name: 'sample2' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+
+    const cookie1 = global.signin(user2);
+    const resUser21 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie1)
+      .send({ name: 'sample1' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+    const resUser22 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie1)
+      .send({ name: 'sample2' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+
+    const cookie2 = global.signin(user3);
+    const resUser31 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie2)
+      .send({ name: 'sample1' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+    const resUser32 = await request(server)
+      .post('/api/shopping')
+      .set('Cookie', cookie2)
+      .send({ name: 'sample2' })
+      .expect(HTTP_CODE.HTTP_CREATED);
+
+    const response = await request(server)
+      .get('/api/shopping')
+      .set('Cookie', cookie)
+      .expect(HTTP_CODE.HTTP_OK);
+
+    expect(response.body.length).toEqual(4);
   });
 });

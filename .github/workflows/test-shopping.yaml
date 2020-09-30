@@ -1,0 +1,12 @@
+name: tests-shopping
+on:
+  pull_request:
+    paths:
+      - 'shopping/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd shopping && npm install && npm run test:ci

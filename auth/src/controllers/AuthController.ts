@@ -14,8 +14,8 @@ import {
   currentUser,
 } from '@familyapp/common';
 
-import { natsWrapper } from '../nats-wrapper';
 import { router } from '../server';
+import { natsWrapper } from '../nats-wrapper';
 import User from '../models/user';
 import { Password } from '../service/password';
 import messages from '../messages';

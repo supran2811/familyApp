@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { body } from 'express-validator';
 import {
   controller,
   post,
@@ -13,12 +14,11 @@ import {
 } from '@familyapp/common';
 
 import { router } from '../server';
-import { body } from 'express-validator';
+import { natsWrapper } from '../nats-wrapper';
 import User from '../models/user';
 import Group from '../models/group';
 import NewMember from '../models/new-member';
 import { GroupAssociatedPublisher } from '../events/publishers/group-associated-publisher';
-import { natsWrapper } from '../nats-wrapper';
 
 @controller('/api/group', router)
 export class GroupController {

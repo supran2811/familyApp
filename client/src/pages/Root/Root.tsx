@@ -8,8 +8,8 @@ import {
   getShoppingList,
   deleteShoppingByIds,
 } from '../../actions/shoppingAction';
-import Skeleton from '../../components/Skeleton';
 import { errors } from '../../selectors/applicationSelector';
+import Skeleton from '../../components/Skeleton';
 import AuthForm from '../../components/AuthForm';
 
 import './Root.css';

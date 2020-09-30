@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: www.ticketingdev.xyz
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 80
+          - path: /api/shopping/?(.*)
+            backend:
+              serviceName: shopping-srv
+              servicePort: 80
+          - path: /api/group/?(.*)
+            backend:
+              serviceName: group-srv
+              servicePort: 80
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 80

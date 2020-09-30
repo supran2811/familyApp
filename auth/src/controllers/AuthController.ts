@@ -14,12 +14,12 @@ import {
   currentUser,
 } from '@familyapp/common';
 
+import { natsWrapper } from '../nats-wrapper';
 import { router } from '../server';
 import User from '../models/user';
 import { Password } from '../service/password';
 import messages from '../messages';
 import { UserCreatedPublisher } from '../events/publishers/user-created-publisher';
-import { natsWrapper } from '../nats-wrapper';
 
 @controller('/api/users', router)
 export class AuthController {

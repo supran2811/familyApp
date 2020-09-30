@@ -13,9 +13,10 @@ import {
 } from '@familyapp/common';
 import { body, check } from 'express-validator';
 import { Request, Response } from 'express';
+
+import { router } from '../server';
 import ShoppingModel from '../models/shopping';
 import User from '../models/user';
-import { router } from '../server';
 
 @controller('/api/shopping', router)
 export class Shopping {

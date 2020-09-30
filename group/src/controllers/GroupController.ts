@@ -15,8 +15,8 @@ import {
 
 import { router } from '../server';
 import { natsWrapper } from '../nats-wrapper';
-import User from '../models/user';
 import Group from '../models/group';
+import User from '../models/user';
 import NewMember from '../models/new-member';
 import { GroupAssociatedPublisher } from '../events/publishers/group-associated-publisher';
 

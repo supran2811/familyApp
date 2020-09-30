@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+import { body, check } from 'express-validator';
 import {
   controller,
   post,
@@ -11,8 +13,6 @@ import {
   NotFoundError,
   AuthenticationError,
 } from '@familyapp/common';
-import { body, check } from 'express-validator';
-import { Request, Response } from 'express';
 
 import { router } from '../server';
 import ShoppingModel from '../models/shopping';

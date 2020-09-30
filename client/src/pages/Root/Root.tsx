@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { IonContent, IonText } from '@ionic/react';
+import { useHistory } from 'react-router';
 
 import { signUpAction, SignUpPayload } from '../../actions/authActions';
 import {
@@ -16,7 +17,6 @@ import './Root.css';
 import useGetCurrentUser from '../../hooks/useGetCurrentUser';
 import Dashboard from '../../components/Dashboard';
 import { shoppingList } from '../../selectors/shoppingSelector';
-import { useHistory } from 'react-router';
 
 const Root: React.FC = () => {
   const dispatch = useDispatch();

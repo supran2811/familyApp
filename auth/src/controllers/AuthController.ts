@@ -16,8 +16,8 @@ import {
 
 import { router } from '../server';
 import { natsWrapper } from '../nats-wrapper';
-import User from '../models/user';
 import { Password } from '../service/password';
+import User from '../models/user';
 import messages from '../messages';
 import { UserCreatedPublisher } from '../events/publishers/user-created-publisher';
 

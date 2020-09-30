@@ -84,8 +84,8 @@ const Dashboard: React.FC<InferProps<DashboardPropTypes>> = ({
   const renderShoppingList = () =>
     shoppinglists.map((item: Shopping) => (
       <IonCol
-        sizeLg="3"
-        sizeXl="2"
+        sizeLg="4"
+        sizeXl="4"
         sizeMd="4"
         sizeSm="6"
         sizeXs="12"

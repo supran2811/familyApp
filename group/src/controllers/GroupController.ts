@@ -54,6 +54,16 @@ export class GroupController {
       });
     }
 
+    // Check if user is already invited by same sender.
+    const newMember = await NewMember.findOne({
+      email,
+      senderEmail: req.currentUser!.email,
+    });
+
+    if (newMember) {
+      throw new BadRequestError('User is already invited!');
+    }
+
     //// else update the invitation model
     const newMemberModel = NewMember.build({
       email,
@@ -82,6 +92,14 @@ export class GroupController {
     return res.status(HTTP_CODE.HTTP_OK).send(formattedInvites);
   }
 
+  @get('/senderinvites')
+  async getAllInvitesSentByUser(req: Request, res: Response) {
+    const invites = await NewMember.find({
+      senderEmail: req.currentUser!.email,
+    });
+    return res.status(HTTP_CODE.HTTP_OK).send(invites);
+  }
+
   @post('/invites/:id/accept')
   async acceptInvite(req: Request, res: Response) {
     const { id } = req.params;
@@ -100,7 +118,7 @@ export class GroupController {
     const user = await User.findById(req.currentUser!.id);
 
     if (!user) {
-      throw new NotFoundError();
+      throw new BadRequestError('User not found!');
     }
 
     if (user.groupId) {
@@ -133,7 +151,7 @@ export class GroupController {
 
     await user.save();
 
-    await NewMember.findByIdAndDelete(id);
+    await NewMember.deleteMany({ email: user.email });
 
     // Publish an event to let others know about this update
     new GroupAssociatedPublisher(natsWrapper.client).publish({
@@ -151,6 +169,18 @@ export class GroupController {
     await NewMember.findByIdAndDelete(id);
 
     res.status(HTTP_CODE.HTTP_OK).send({ id });
+  }
+
+  @get('/members')
+  async getMembers(req: Request, res: Response) {
+    const user = await User.findById(req.currentUser!.id);
+    if (!user || !user.groupId) {
+      throw new NotFoundError();
+    }
+
+    const group = await Group.findById(user.groupId).populate('members');
+
+    return res.status(HTTP_CODE.HTTP_OK).send(group!.members);
   }
 
   @get('/:id')

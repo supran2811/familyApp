@@ -26,6 +26,9 @@ import Root from './pages/Root';
 import Login from './pages/Login';
 import { loading } from './selectors/applicationSelector';
 import ShoppingList from './pages/ShoppingList';
+import MemberList from './pages/MemberList';
+import ProtectedRoute from './hoc/ProtectedRoute';
+import Notifications from './pages/Notifications';
 
 const App: React.FC = () => {
   const isLoading = useSelector(loading);
@@ -34,7 +37,9 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <Route exact path="/" render={() => <Root />} />
-        <Route path="/shopping/:id" component={ShoppingList} />
+        <ProtectedRoute path="/members" component={MemberList} />
+        <ProtectedRoute path="/shopping/:id" component={ShoppingList} />
+        <ProtectedRoute path="/notifications" component={Notifications} />
         <Route path="/login" component={Login} />
       </IonReactRouter>
       <IonLoading isOpen={isLoading} message={'Please wait...'} />

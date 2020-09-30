@@ -17,7 +17,6 @@ import './SideMenu.css';
 import { User } from '../../reducers/auth';
 import { signOutAction } from '../../actions/authActions';
 import { useDispatch } from 'react-redux';
-import { AsyncThunk } from '@reduxjs/toolkit';
 
 interface PropTypes {
   disabled: boolean;
@@ -37,7 +36,7 @@ const SideMenu: React.FC<InferProps<PropTypes>> = ({
     action?: any;
   }[] = currentUser
     ? [
-        { label: 'Members', href: '/' },
+        { label: 'Members', href: '/members' },
         { label: 'Signout', action: signOutAction },
       ]
     : [{ label: 'Signin', href: '/login' }];

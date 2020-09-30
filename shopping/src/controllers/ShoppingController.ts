@@ -113,8 +113,6 @@ export class Shopping {
 
       /// Create an array of userids
       userids = users.map((user) => user.id);
-
-      console.log('userids', userids);
     }
 
     /// return shopping list created by any of these users

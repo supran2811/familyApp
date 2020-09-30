@@ -78,6 +78,20 @@ describe('new member invitation', () => {
 
     expect(natsWrapper.client.publish).toHaveBeenCalled();
   });
+
+  it('throws bad request error when same user is again inviting same person', async () => {
+    await request(server)
+      .post('/api/group/invites')
+      .set('Cookie', global.signin(mockUser))
+      .send({ email: 'newuser@email.com' })
+      .expect(HTTP_CODE.HTTP_OK);
+
+    await request(server)
+      .post('/api/group/invites')
+      .set('Cookie', global.signin(mockUser))
+      .send({ email: 'newuser@email.com' })
+      .expect(HTTP_CODE.HTTP_BAD_REQUEST);
+  });
 });
 
 describe('get all invites', () => {
@@ -192,5 +206,71 @@ describe('accept invitation', () => {
     expect(user!.groupId.toString()).toEqual(group!.id);
 
     expect(natsWrapper.client.publish).toHaveBeenCalled();
+  });
+});
+
+describe('get members', () => {
+  const mockUser1 = {
+    id: mongoose.Types.ObjectId().toHexString(),
+    email: 'user1@test.com',
+    name: 'testuser1',
+  };
+
+  const mockUser2 = {
+    id: mongoose.Types.ObjectId().toHexString(),
+    email: 'user2@test.com',
+    name: 'testuser2',
+  };
+
+  beforeEach(async () => {
+    const user1 = User.build(mockUser1);
+    await user1.save();
+
+    const user2 = User.build(mockUser2);
+    await user2.save();
+  });
+
+  it('returns members list based on users group', async () => {
+    //// user1 send invites to user2
+
+    await request(server)
+      .post('/api/group/invites')
+      .set('Cookie', global.signin(mockUser1))
+      .send({ email: mockUser2.email })
+      .expect(HTTP_CODE.HTTP_OK);
+
+    /// get members for user1 should return only 1 member in his group
+
+    const response = await request(server)
+      .get('/api/group/members')
+      .set('Cookie', global.signin(mockUser1));
+    expect(response.body).toHaveLength(1);
+    /// user2 signs in and accept the membership
+
+    const {
+      body: [invite],
+    } = await request(server)
+      .get('/api/group/invites')
+      .set('Cookie', global.signin(mockUser2))
+      .expect(HTTP_CODE.HTTP_OK);
+
+    await request(server)
+      .post(`/api/group/invites/${invite.id}/accept`)
+      .set('Cookie', global.signin(mockUser2))
+      .send({})
+      .expect(HTTP_CODE.HTTP_OK);
+
+    // get members for user1 and 2 should return 2 members
+    const responseUser1 = await request(server)
+      .get('/api/group/members')
+      .set('Cookie', global.signin(mockUser1))
+      .expect(HTTP_CODE.HTTP_OK);
+    expect(responseUser1.body).toHaveLength(2);
+
+    const responseUser2 = await request(server)
+      .get('/api/group/members')
+      .set('Cookie', global.signin(mockUser2))
+      .expect(HTTP_CODE.HTTP_OK);
+    expect(responseUser2.body).toHaveLength(2);
   });
 });

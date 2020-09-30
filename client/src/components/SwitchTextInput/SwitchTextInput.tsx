@@ -17,7 +17,7 @@ const SwitchTextInput: React.FC<InferProps<IonInputProps>> = (props) => {
     />
   ) : (
     <IonText
-      color="secondary"
+      color="primary"
       onClick={() => setEnableInput(true)}
       className="text"
     >

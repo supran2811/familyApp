@@ -22,7 +22,7 @@ const CreateForm: React.FC<InferProps<PropTypes>> = ({
       <IonInput
         type="text"
         size={10}
-        maxlength={10}
+        maxlength={40}
         minlength={2}
         color="primary"
         autofocus={true}

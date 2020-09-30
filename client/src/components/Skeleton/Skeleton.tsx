@@ -19,7 +19,7 @@ import {
 import SideMenu from '../SideMenu';
 
 import { User } from '../../reducers/auth';
-import { homeOutline } from 'ionicons/icons';
+import { homeOutline, notifications } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 
 interface SkeletonPropType {
@@ -43,6 +43,13 @@ const Skeleton: React.FC<InferProps<SkeletonPropType>> = ({
             <IonMenuButton />
           </IonButtons>
           <IonTitle>FamilyApp</IonTitle>
+          {currentUser && (
+            <IonButtons slot="end">
+              <IonButton onClick={() => history.push('/notifications')}>
+                <IonIcon slot="icon-only" icon={notifications} />
+              </IonButton>
+            </IonButtons>
+          )}
         </IonToolbar>
       </IonHeader>
       <IonContent>

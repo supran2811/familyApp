@@ -1,4 +1,4 @@
-name: deploy-manifest
+name: deploy-infra
 on:
   push:
     branches:

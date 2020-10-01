@@ -14,6 +14,7 @@ import {
   IonSplitPane,
   IonMenu,
   IonBackButton,
+  IonText,
 } from '@ionic/react';
 
 import SideMenu from '../SideMenu';
@@ -45,6 +46,7 @@ const Skeleton: React.FC<InferProps<SkeletonPropType>> = ({
           <IonTitle>FamilyApp</IonTitle>
           {currentUser && (
             <IonButtons slot="end">
+              <IonText>{currentUser.name}</IonText>
               <IonButton onClick={() => history.push('/notifications')}>
                 <IonIcon slot="icon-only" icon={notifications} />
               </IonButton>
